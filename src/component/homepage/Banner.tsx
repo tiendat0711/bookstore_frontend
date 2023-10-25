@@ -1,6 +1,6 @@
 import React from "react";
 
-function Banner() {
+const Banner = () => {
     return (
         <div className="p-2 mb-2 bg-dark">
             <div className="container-fluid py-5 text-white d-flex 

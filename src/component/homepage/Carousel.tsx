@@ -4,7 +4,7 @@ import BookModel from "../../models/Book";
 import { get3NewBook } from "../../api/bookApi";
 import CarouselItem from "./CarouselItem";
 
-const Carousel: React.FC = () => {
+const Carousel = () => {
     const [listBook, setListBook] = useState<BookModel[]>([]);
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState(null);
@@ -12,7 +12,7 @@ const Carousel: React.FC = () => {
     useEffect(() => {
         get3NewBook().then(
             data => {
-                setListBook(data);
+                setListBook(data.result);
                 setLoadingData(false);
             }
         ).catch(

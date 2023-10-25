@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import BookModel from '../../models/Book';
 import Image from '../../models/Image';
 import { getAllImageForBook } from '../../api/imageApi';
-
+import { Link } from 'react-router-dom';
 interface BookPropsInterface {
     book: BookModel;
 }
 
 
-const BookProps: React.FC<BookPropsInterface> = (props) => {
+const BookProps = ({ book }: BookPropsInterface) => {
 
-    const bookId: number = props.book.bookId;
+    const bookId: number = book.bookId;
 
     const [listImage, setListImage] = useState<Image[]>([]);
     const [loadingData, setLoadingData] = useState(true);
@@ -49,21 +49,31 @@ const BookProps: React.FC<BookPropsInterface> = (props) => {
     return (
         <div className="col-md-3 mt-2">
             <div className="card">
-                {listImage[0] && listImage[0].imageData && <img
-                    src={`${listImage[0].imageData}`}
-                    className="card-img-top"
-                    alt={props.book.bookName}
-                    style={{ height: '200px' }}
-                />}
+
+                {listImage[0] && listImage[0].imageData &&
+
+                    <Link to={`/books/${book.bookId}`} >
+                        <img
+                            src={`${listImage[0].imageData}`}
+                            className="card-img-top"
+                            alt={book.bookName}
+                            style={{ height: '200px' }}
+                        />
+                    </Link>
+
+                }
                 <div className="card-body">
-                    <h5 className="card-title">{props.book.bookName}</h5>
-                    <p className="card-text">{props.book.description}</p>
+                    <Link to={`/books/${book.bookId}`} style={{ textDecoration: 'none' }}>
+                        <h5 className="card-title">{book.bookName}</h5>
+                    </Link>
+
+                    <p className="card-text">{book.description}</p>
                     <div className="price">
                         <span className="original-price">
-                            <del>{props.book.listPrice}</del>
+                            <del>{book.listPrice}</del>
                         </span>
                         <span className="discounted-price">
-                            <strong>{props.book.sellPrice}</strong>
+                            <strong>{book.sellPrice}</strong>
                         </span>
                     </div>
                     <div className="row mt-2" role="group">
@@ -80,7 +90,7 @@ const BookProps: React.FC<BookPropsInterface> = (props) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

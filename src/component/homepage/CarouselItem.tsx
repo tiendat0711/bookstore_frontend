@@ -3,14 +3,14 @@ import BookModel from '../../models/Book';
 import Image from '../../models/Image';
 import { getImageForOneBook } from '../../api/imageApi';
 
-interface CarouselItemInterface {
+interface CarouselItemProps {
     book: BookModel;
 }
 
 
-const CarouselItem: React.FC<CarouselItemInterface> = (props) => {
+const CarouselItem = ({ book }: CarouselItemProps) => {
 
-    const bookId: number = props.book.bookId;
+    const bookId: number = book.bookId;
 
     const [listImage, setListImage] = useState<Image[]>([]);
     const [loadingData, setLoadingData] = useState(true);
@@ -53,8 +53,8 @@ const CarouselItem: React.FC<CarouselItemInterface> = (props) => {
                     <img src={`${listImage[0].imageData}`} className="float-end" style={{ width: '150px' }} />}
             </div>
             <div className="col-7">
-                <h5>{props.book.bookName}</h5>
-                <p>{props.book.description}</p>
+                <h5>{book.bookName}</h5>
+                <p>{book.description}</p>
             </div>
         </>
     );

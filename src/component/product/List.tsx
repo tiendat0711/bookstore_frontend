@@ -1,27 +1,56 @@
 import React, { useEffect, useState } from "react";
 import BookProps from "./BookProps";
 import BookModel from "../../models/Book";
-import { getAllBook } from "../../api/bookApi";
+import { getBookByNameAndCategoryId, getAllBook } from "../../api/bookApi";
 import { Paginate } from "../utils/paginate";
 
-const List: React.FC = () => {
+interface ListProps {
+    keywordSearch: string;
+    categoryId: number;
+}
+
+const List = ({ keywordSearch, categoryId }: ListProps) => {
     const [listBook, setListBook] = useState<BookModel[]>([]);
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState(null);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+    // const [totalBook, setTotalBook] = useState(0);
     useEffect(() => {
-        getAllBook().then(
-            data => {
-                setListBook(data);
-                setLoadingData(false);
-            }
-        ).catch(
-            error => {
-                setLoadingData(false);
-                setError(error.message)
-            }
-        )
-    }, [])
+        if (keywordSearch === '' && categoryId === 0) {
+            getAllBook(currentPage - 1).then(
+                rs => {
+                    setListBook(rs.result);
+                    setTotalPage(rs.totalPage);
+                    setLoadingData(false);
+                }
+            ).catch(
+                error => {
+                    setLoadingData(false);
+                    setError(error.message)
+                }
+            );
+        }
+        else {
+            getBookByNameAndCategoryId(keywordSearch, categoryId).then(
+                rs => {
+                    setListBook(rs.result);
+                    setTotalPage(rs.totalPage);
+                    setLoadingData(false);
+                }
+            ).catch(
+                error => {
+                    setLoadingData(false);
+                    setError(error.message)
+                }
+            );
+        }
+
+    }, [currentPage, keywordSearch, categoryId]);
+
+    const paginate = (page: number) => {
+        setCurrentPage(page);
+    }
 
     if (loadingData) {
         return (
@@ -49,7 +78,7 @@ const List: React.FC = () => {
                 }
             </div>
 
-            <Paginate />
+            <Paginate currentPage={currentPage} totalPage={totalPage} paginate={paginate} />
         </div>
     );
 }
